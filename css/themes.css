@@ -1,0 +1,192 @@
+/* Theme-specific CSS for 3D City Simulator */
+
+/* Light Theme */
+.theme-light {
+    --bg-primary: var(--light-bg-primary);
+    --bg-secondary: var(--light-bg-secondary);
+    --bg-tertiary: var(--light-bg-tertiary);
+    --text-primary: var(--light-text-primary);
+    --text-secondary: var(--light-text-secondary);
+    --text-tertiary: var(--light-text-tertiary);
+    --border: var(--light-border);
+    --accent: var(--light-accent);
+    --accent-hover: var(--light-accent-hover);
+    --success: var(--light-success);
+    --warning: var(--light-warning);
+    --error: var(--light-error);
+    --shadow: var(--light-shadow);
+}
+
+/* Dark Theme */
+.theme-dark {
+    --bg-primary: var(--dark-bg-primary);
+    --bg-secondary: var(--dark-bg-secondary);
+    --bg-tertiary: var(--dark-bg-tertiary);
+    --text-primary: var(--dark-text-primary);
+    --text-secondary: var(--dark-text-secondary);
+    --text-tertiary: var(--dark-text-tertiary);
+    --border: var(--dark-border);
+    --accent: var(--dark-accent);
+    --accent-hover: var(--dark-accent-hover);
+    --success: var(--dark-success);
+    --warning: var(--dark-warning);
+    --error: var(--dark-error);
+    --shadow: var(--dark-shadow);
+}
+
+/* Theme-specific icon visibility */
+.theme-light #dark-icon {
+    display: none;
+}
+
+.theme-dark #light-icon {
+    display: none;
+}
+
+/* Logo and branding */
+.app-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.app-logo svg {
+    margin-right: var(--spacing-xs);
+}
+
+.developer-info {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-align: center;
+    margin-top: var(--spacing-xs);
+}
+
+/* Theme-specific modal styles */
+.theme-light .modal-content {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.theme-dark .modal-content {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Theme-specific button styles */
+.theme-light .primary-btn {
+    background-color: var(--light-accent);
+}
+
+.theme-light .primary-btn:hover {
+    background-color: var(--light-accent-hover);
+}
+
+.theme-dark .primary-btn {
+    background-color: var(--dark-accent);
+}
+
+.theme-dark .primary-btn:hover {
+    background-color: var(--dark-accent-hover);
+}
+
+/* Theme-specific slider styles */
+.theme-light input[type="range"]::-webkit-slider-thumb {
+    background: var(--light-accent);
+}
+
+.theme-light input[type="range"]::-moz-range-thumb {
+    background: var(--light-accent);
+}
+
+.theme-dark input[type="range"]::-webkit-slider-thumb {
+    background: var(--dark-accent);
+}
+
+.theme-dark input[type="range"]::-moz-range-thumb {
+    background: var(--dark-accent);
+}
+
+/* Splash screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.splash-logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: var(--spacing-lg);
+    color: var(--accent);
+    text-align: center;
+}
+
+.splash-tagline {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.splash-developer {
+    font-size: 1rem;
+    color: var(--text-tertiary);
+    margin-top: var(--spacing-xl);
+    text-align: center;
+}
+
+.splash-loading {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--bg-tertiary);
+    border-top: 5px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Branding in controls panel */
+.controls-header h1 {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.controls-header h1::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: var(--accent);
+    margin-right: var(--spacing-xs);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Branding in footer */
+.controls-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls-footer p {
+    margin-bottom: var(--spacing-xs);
+}
+
+.version-info {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
