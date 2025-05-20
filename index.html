@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D City Simulator - Developed by Dineshkumar Rajendran</title>
     <!-- Local libraries -->
-    <script src="lib/three.min.js"></script>
+    <script src="lib/three.js"></script>
     <script src="lib/OrbitControls-global.js"></script>
     <script src="lib/tween.umd.js"></script>
     <!-- Main CSS -->
@@ -54,10 +54,9 @@
             justify-content: center;
             background: none;
             border: none;
+            border-radius: 6px;
             padding: 8px;
-            border-radius: 4px;
             cursor: pointer;
-            color: var(--text-color);
             transition: background-color 0.2s;
         }
 
@@ -70,30 +69,129 @@
         }
 
         .nav-tool-btn.active {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(66, 133, 244, 0.2);
         }
 
         .dark-theme .nav-tool-btn.active {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(66, 133, 244, 0.3);
         }
 
         .nav-tool-btn svg {
             width: 24px;
             height: 24px;
-            fill: var(--text-color);
+            fill: #333;
             margin-bottom: 4px;
+        }
+
+        .dark-theme .nav-tool-btn svg {
+            fill: #eee;
         }
 
         .nav-tool-btn span {
             font-size: 12px;
+            color: #333;
         }
 
-        /* Shape and Material Options */
+        .dark-theme .nav-tool-btn span {
+            color: #eee;
+        }
+
+        /* Material and Visualization Styles */
+        .visualization-modes,
+        .material-presets,
+        .visual-toggles {
+            margin-bottom: 20px;
+        }
+
+        .visualization-modes h3,
+        .material-presets h3,
+        .visual-toggles h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .dark-theme .visualization-modes h3,
+        .dark-theme .material-presets h3,
+        .dark-theme .visual-toggles h3 {
+            color: #bbb;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Control Row Styles */
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .control-row label {
+            flex: 1;
+        }
+
+        .control-row input[type="range"] {
+            flex: 2;
+        }
+
+        .control-row input[type="color"] {
+            width: 40px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Shape and Material Options Styles */
         .shape-options, .material-options {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .shape-option, .material-option {
@@ -200,95 +298,111 @@
                     <span>Help</span>
                 </button>
                 
-                <button id="theme-toggle" class="nav-tool-btn" title="Toggle Theme (Ctrl+T)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="none" d="M0 0h24v24H0z"/>
-                        <path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/>
-                    </svg>
-                    <span>Theme</span>
+                <button id="theme-toggle" class="nav-tool-btn" title="Toggle Theme">
+                    <span id="theme-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"/>
+                            <path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/>
+                        </svg>
+                    </span>
                 </button>
             </div>
         </div>
 
-        <!-- 3D Scene Container -->
-        <div id="scene-container"></div>
+        <!-- 3D Viewport -->
+        <div id="canvas-container">
+            <div id="perspective-indicator" class="perspective-indicator">1-Point Perspective</div>
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="spinner"></div>
+                <p>Loading 3D City Simulator...</p>
+            </div>
+            <div id="selection-info" class="selection-info hidden">
+                <p>Building Selected: <span id="selected-building-name">None</span></p>
+            </div>
+            <div id="camera-controls" class="camera-controls">
+                <button id="orbit-camera" class="camera-btn active" title="Orbit Camera">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/><path d="M12 21a9 9 0 0 1-9-9h2a7 7 0 0 0 7 7v2z"/></svg>
+                </button>
+                <button id="select-mode" class="camera-btn" title="Select Buildings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 8h4V6.5a1.5 1.5 0 1 1 3 0V8h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1V6.5a1.5 1.5 0 1 1 3 0V8z"/></svg>
+                </button>
+            </div>
+        </div>
 
-        <!-- Controls Panel -->
-        <div id="controls-panel" class="controls-panel">
+        <!-- Control Panel -->
+        <div id="controls-panel">
             <div class="controls-header">
                 <h1>3D City Simulator</h1>
-                <div class="controls-actions">
-                    <button id="generateBtn" class="primary-btn">Generate City</button>
-                    <button id="randomizeBtn" class="secondary-btn">Randomize</button>
-                    <button id="helpBtn" class="tertiary-btn">Help</button>
+                <div class="theme-toggle">
+                    <button id="theme-toggle-btn" title="Toggle Theme">
+                        <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>
+                        <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></svg>
+                    </button>
                 </div>
             </div>
-            
+
             <div class="controls-content">
                 <!-- Perspective Controls -->
                 <div class="control-group">
                     <div class="control-header">
-                        <h2>Perspective Controls</h2>
+                        <h2>Perspective Type</h2>
                         <button class="toggle-btn" data-target="perspective-controls">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"/></svg>
                         </button>
                     </div>
                     <div id="perspective-controls" class="control-content">
-                        <button id="refresh-vp" class="secondary-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                                <path fill="none" d="M0 0h24v24H0z"/>
-                                <path d="M5.463 4.433A9.961 9.961 0 0 1 12 2c5.523 0 10 4.477 10 10 0 2.136-.67 4.116-1.81 5.74L17 12h3A8 8 0 0 0 6.46 6.228l-.997-1.795zm13.074 15.134A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12c0-2.136.67-4.116 1.81-5.74L7 12H4a8 8 0 0 0 13.54 5.772l.997 1.795z"/>
-                            </svg>
-                            Refresh Vanishing Point
-                        </button>
-                        
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="perspective-1point" name="perspectiveType" value="1-point" checked>
-                                <label for="perspective-1point">1-Point Perspective</label>
+                                <input type="radio" id="onePoint" name="perspectiveType" value="1-point" checked>
+                                <label for="onePoint">1-Point Perspective</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="perspective-2point" name="perspectiveType" value="2-point">
-                                <label for="perspective-2point">2-Point Perspective</label>
+                                <input type="radio" id="twoPoint" name="perspectiveType" value="2-point">
+                                <label for="twoPoint">2-Point Perspective</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="perspective-3point" name="perspectiveType" value="3-point">
-                                <label for="perspective-3point">3-Point Perspective</label>
+                                <input type="radio" id="threePoint" name="perspectiveType" value="3-point">
+                                <label for="threePoint">3-Point Perspective</label>
                             </div>
                         </div>
-                        
-                        <div class="vanishing-point-controls">
-                            <h3>Vanishing Point 1</h3>
-                            <div class="slider-container">
-                                <input type="range" id="vp1-position" min="-1000" max="1000" value="0">
-                                <span id="vp1-value">0</span>
+
+                        <div id="vanishing-point-controls">
+                            <h3>Vanishing Points</h3>
+                            <div id="vp1-controls" class="slider-container">
+                                <label for="vp1-position">VP1 Position: <span id="vp1-position-value">-1000</span></label>
+                                <input type="range" id="vp1-position" min="-1000" max="1000" value="-1000">
                             </div>
-                            
-                            <h3>Vanishing Point 2</h3>
-                            <div class="slider-container">
-                                <input type="range" id="vp2-position" min="-1000" max="1000" value="0">
-                                <span id="vp2-value">0</span>
+                            <div id="vp2-controls" class="slider-container">
+                                <label for="vp2-position">VP2 Position: <span id="vp2-position-value">1000</span></label>
+                                <input type="range" id="vp2-position" min="-1000" max="1000" value="1000">
                             </div>
-                            
-                            <h3>Vanishing Point 3</h3>
-                            <div class="slider-container">
-                                <input type="range" id="vp3-position" min="-1000" max="1000" value="500">
-                                <span id="vp3-value">500</span>
+                            <div id="vp3-controls" class="slider-container">
+                                <label for="vp3-position">VP3 Position: <span id="vp3-position-value">1000</span></label>
+                                <input type="range" id="vp3-position" min="-1000" max="1000" value="1000">
                             </div>
                         </div>
-                        
+                    </div>
+                </div>
+
+                <!-- Camera Views -->
+                <div class="control-group">
+                    <div class="control-header">
+                        <h2>Camera Views</h2>
+                        <button class="toggle-btn" data-target="camera-view-controls">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"/></svg>
+                        </button>
+                    </div>
+                    <div id="camera-view-controls" class="control-content">
+                        <p>Preset views to experience different perspectives:</p>
                         <div class="camera-views">
-                            <h3>Camera Views</h3>
-                            <div class="view-buttons">
-                                <button id="view1" class="view-btn">Front View</button>
-                                <button id="view2" class="view-btn">Corner View</button>
-                                <button id="view3" class="view-btn">Top View</button>
-                                <button id="view4" class="view-btn">Street Level</button>
-                                <button id="view5" class="view-btn">Bird's Eye</button>
-                                <button id="view6" class="view-btn">Dramatic View</button>
-                            </div>
-                            <p class="help-text">You can also freely navigate by dragging with your mouse.</p>
+                            <button id="view1" class="view-btn">Front View</button>
+                            <button id="view2" class="view-btn">Corner View</button>
+                            <button id="view3" class="view-btn">Top View</button>
+                            <button id="view4" class="view-btn">Street Level</button>
+                            <button id="view5" class="view-btn">Bird's Eye</button>
+                            <button id="view6" class="view-btn">Dramatic View</button>
                         </div>
+                        <p class="help-text">You can also freely navigate by dragging with your mouse.</p>
                     </div>
                 </div>
 
@@ -302,13 +416,13 @@
                     </div>
                     <div id="city-controls" class="control-content">
                         <div class="slider-container">
-                            <label for="building-count">Number of Buildings: <span id="building-count-value">10</span></label>
-                            <input type="range" id="building-count" min="3" max="30" value="10">
+                            <label for="buildingCount">Number of Buildings: <span id="buildingCountValue">10</span></label>
+                            <input type="range" id="buildingCount" min="3" max="30" value="10">
                         </div>
                         
                         <div class="slider-container">
-                            <label for="grid-size">City Grid Size: <span id="grid-size-value">500</span></label>
-                            <input type="range" id="grid-size" min="200" max="1000" value="500">
+                            <label for="gridSize">City Grid Size: <span id="gridSizeValue">500</span></label>
+                            <input type="range" id="gridSize" min="200" max="1000" value="500">
                         </div>
 
                         <div class="shape-selector">
@@ -351,23 +465,23 @@
                     <div id="visualization-controls" class="control-content">
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="vis-shaded" name="viewMode" value="shaded" checked>
+                                <input type="radio" id="vis-shaded" name="visualizationMode" value="shaded" checked>
                                 <label for="vis-shaded">Shaded</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="vis-wireframe" name="viewMode" value="wireframe">
+                                <input type="radio" id="vis-wireframe" name="visualizationMode" value="wireframe">
                                 <label for="vis-wireframe">Wireframe</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="vis-wireframe-shaded" name="viewMode" value="wireframe-shaded">
+                                <input type="radio" id="vis-wireframe-shaded" name="visualizationMode" value="wireframe-shaded">
                                 <label for="vis-wireframe-shaded">Wireframe on Shaded</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="vis-xray" name="viewMode" value="xray">
+                                <input type="radio" id="vis-xray" name="visualizationMode" value="xray">
                                 <label for="vis-xray">X-Ray</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="vis-silhouette" name="viewMode" value="silhouette">
+                                <input type="radio" id="vis-silhouette" name="visualizationMode" value="silhouette">
                                 <label for="vis-silhouette">Silhouette</label>
                             </div>
                         </div>
@@ -477,7 +591,7 @@
                     <div id="lighting-controls" class="control-content">
                         <div class="radio-group">
                             <div class="radio-option">
-                                <input type="radio" id="light-day" name="lightingMode" value="daylight" checked>
+                                <input type="radio" id="light-day" name="lightingMode" value="day" checked>
                                 <label for="light-day">Day</label>
                             </div>
                             <div class="radio-option">
@@ -499,31 +613,68 @@
                         </div>
                         
                         <div class="light-properties">
-                            <div class="slider-container">
-                                <label for="light-intensity">Light Intensity: <span id="light-intensity-value">1.0</span></label>
+                            <div class="control-row">
+                                <label for="shadows-toggle">Shadows</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="shadows-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="control-row">
+                                <label for="light-intensity">Intensity</label>
                                 <input type="range" id="light-intensity" min="0" max="2" step="0.1" value="1.0">
                             </div>
                             
-                            <div class="slider-container">
-                                <label for="ambient-intensity">Ambient Intensity: <span id="ambient-intensity-value">0.5</span></label>
-                                <input type="range" id="ambient-intensity" min="0" max="1" step="0.1" value="0.5">
+                            <div class="control-row">
+                                <label for="light-diffuse">Diffuse</label>
+                                <input type="range" id="light-diffuse" min="0" max="1" step="0.1" value="0.7">
                             </div>
                             
-                            <div class="checkbox-container">
-                                <label for="enable-shadows">
-                                    <input type="checkbox" id="enable-shadows" checked>
-                                    Enable Shadows
-                                </label>
+                            <div class="control-row">
+                                <label for="light-color">Color</label>
+                                <input type="color" id="light-color" value="#ffffff">
                             </div>
                             
+                            <button id="add-light-btn" class="secondary-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path fill="none" d="M0 0h24v24H0z"/><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>
+                                Add Light
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Building Controls -->
+                <div class="control-group">
+                    <div class="control-header">
+                        <h2>Building Controls</h2>
+                        <button class="toggle-btn" data-target="building-controls">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"/></svg>
+                        </button>
+                    </div>
+                    <div id="building-controls" class="control-content">
+                        <p>Select a building in the scene or from the list below:</p>
+                        <div id="building-selector" class="building-selector">
+                            <select id="building-select">
+                                <option value="">-- Select a building --</option>
+                            </select>
+                        </div>
+                        <div id="building-editor" class="building-editor">
                             <div class="slider-container">
-                                <label for="shadow-intensity">Shadow Intensity: <span id="shadow-intensity-value">0.5</span></label>
-                                <input type="range" id="shadow-intensity" min="0" max="1" step="0.1" value="0.5">
+                                <label for="building-width">Width: <span id="building-width-value">30</span></label>
+                                <input type="range" id="building-width" min="10" max="100" value="30">
                             </div>
-                            
                             <div class="slider-container">
-                                <label for="diffuse-intensity">Diffuse Intensity: <span id="diffuse-intensity-value">0.7</span></label>
-                                <input type="range" id="diffuse-intensity" min="0" max="1" step="0.1" value="0.7">
+                                <label for="building-height">Height: <span id="building-height-value">80</span></label>
+                                <input type="range" id="building-height" min="20" max="300" value="80">
+                            </div>
+                            <div class="slider-container">
+                                <label for="building-depth">Depth: <span id="building-depth-value">30</span></label>
+                                <input type="range" id="building-depth" min="10" max="100" value="30">
+                            </div>
+                            <div class="color-picker">
+                                <label for="building-color">Color:</label>
+                                <input type="color" id="building-color" value="#4a90e2">
                             </div>
                         </div>
                     </div>
@@ -538,7 +689,8 @@
                         </button>
                     </div>
                     <div id="visual-options-controls" class="control-content">
-                        <div class="toggle-options">
+                        <div class="visual-toggles">
+                            <h3>Show/Hide</h3>
                             <div class="control-row">
                                 <label for="show-vp-toggle">Vanishing Points</label>
                                 <div class="toggle-switch">
@@ -583,7 +735,7 @@
             </div>
 
             <div class="controls-footer">
-                <p>© 2025. Developed by Dineshkumar Rajendran, Lecturer at Old Dominion University.</p>
+                <p>Developed by Dineshkumar Rajendran</p>
             </div>
         </div>
 
