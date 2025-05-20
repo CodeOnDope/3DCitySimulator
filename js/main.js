@@ -83,7 +83,7 @@ function generateInitialCity() {
     try {
         // Get building count from slider or use default
         let count = 10; // Default value
-        const buildingCountElement = document.getElementById('building-count');
+        const buildingCountElement = document.getElementById('buildingCount');
         if (buildingCountElement) {
             count = parseInt(buildingCountElement.value);
         }
@@ -97,7 +97,7 @@ function generateInitialCity() {
         
         // Get grid size from slider or use default
         let gridSize = 500; // Default value
-        const gridSizeElement = document.getElementById('grid-size');
+        const gridSizeElement = document.getElementById('gridSize');
         if (gridSizeElement) {
             gridSize = parseInt(gridSizeElement.value);
         }
