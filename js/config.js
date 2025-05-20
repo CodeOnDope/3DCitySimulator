@@ -133,6 +133,8 @@ const CONFIG = {
         lineColor: '#0000ff',
         vanishingPointSize: 5,
         windowColor: 0xffffcc,
-        windowOpacity: 0.7
+        windowOpacity: 0.7,
+        horizonColor: '#0000ff',
+        helperLineColor: '#00ff00'
     }
 };

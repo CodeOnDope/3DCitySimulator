@@ -29,12 +29,17 @@ class Renderer {
         this.showGrid = true;
         this.showVanishingPoints = true;
         this.showReferenceLines = true;
+        this.showHorizonLine = true;
+        this.showHelperLines = true;
         this.showWindows = true;
         this.selectedBuilding = null;
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         this.isSelectionMode = false;
         this.perspectiveManager = null;
+
+        this.horizonLine = null;
+        this.helperLines = [];
         
         // Bind methods
         this.animate = this.animate.bind(this);
@@ -342,7 +347,9 @@ class Renderer {
         this.currentPerspectiveType = type;
         this.updateVanishingPoints();
         this.updateReferenceLines();
-        
+        this.updateHorizonLine();
+        this.updateHelperLines();
+
         // Update perspective indicator
         document.getElementById('perspective-indicator').textContent = type;
     }
@@ -401,6 +408,9 @@ class Renderer {
             this.scene.add(label);
             this.vanishingPoints.push(label);
         });
+
+        this.updateHorizonLine();
+        this.updateHelperLines();
     }
     
     /**
@@ -446,6 +456,44 @@ class Renderer {
             });
         });
     }
+
+    updateHorizonLine() {
+        if (this.horizonLine) {
+            this.scene.remove(this.horizonLine);
+            this.horizonLine = null;
+        }
+        if (this.vanishingPoints.length === 0) return;
+        const vp = this.vanishingPoints[0].position;
+        const size = CONFIG.grid.defaultSize * 2;
+        const geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-size, vp.y, 0),
+            new THREE.Vector3(size, vp.y, 0)
+        ]);
+        const material = new THREE.LineBasicMaterial({ color: CONFIG.visual.horizonColor });
+        this.horizonLine = new THREE.Line(geometry, material);
+        this.horizonLine.visible = this.showHorizonLine;
+        this.scene.add(this.horizonLine);
+    }
+
+    updateHelperLines() {
+        this.helperLines.forEach(l => this.scene.remove(l));
+        this.helperLines = [];
+        if (this.vanishingPoints.length === 0) return;
+        const vp = this.vanishingPoints[0].position;
+        const size = CONFIG.grid.defaultSize;
+        const step = size / CONFIG.grid.divisions;
+        for (let x = -size / 2; x <= size / 2; x += step) {
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(x, 0, 0),
+                new THREE.Vector3(vp.x, vp.y, vp.z)
+            ]);
+            const material = new THREE.LineBasicMaterial({ color: CONFIG.visual.helperLineColor });
+            const line = new THREE.Line(geometry, material);
+            line.visible = this.showHelperLines;
+            this.scene.add(line);
+            this.helperLines.push(line);
+        }
+    }
     
     /**
      * Toggle vanishing points visibility
@@ -473,6 +521,20 @@ class Renderer {
     toggleReferenceLines(visible) {
         this.showReferenceLines = visible;
         this.referenceLines.forEach(line => {
+            line.visible = visible;
+        });
+    }
+
+    toggleHorizonLine(visible) {
+        this.showHorizonLine = visible;
+        if (this.horizonLine) {
+            this.horizonLine.visible = visible;
+        }
+    }
+
+    toggleHelperLines(visible) {
+        this.showHelperLines = visible;
+        this.helperLines.forEach(line => {
             line.visible = visible;
         });
     }

@@ -556,6 +556,13 @@ select {
   margin-top: var(--spacing-xs);
 }
 
+/* Educational Note */
+.educational-note {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
 /* Building Editor */
 .building-editor {
   margin-top: var(--spacing-md);

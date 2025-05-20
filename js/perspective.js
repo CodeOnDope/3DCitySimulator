@@ -48,15 +48,23 @@ class PerspectiveManager {
         });
         
         // Vanishing point position sliders
-        document.getElementById('vp1-position').addEventListener('input', (e) => {
-            // Temporarily disable camera sync while manually adjusting
+        document.getElementById('vp1-x').addEventListener('input', (e) => {
             this.cameraSync = false;
-            this.updateVanishingPointPosition(0, parseInt(e.target.value));
-            document.getElementById('vp1-position-value').textContent = e.target.value;
+            this.updateVanishingPointAxis(0, 'x', parseInt(e.target.value));
+            document.getElementById('vp1-x-value').textContent = e.target.value;
         });
-        
-        document.getElementById('vp1-position').addEventListener('change', (e) => {
-            // Re-enable camera sync after manual adjustment is complete
+
+        document.getElementById('vp1-x').addEventListener('change', () => {
+            this.cameraSync = true;
+        });
+
+        document.getElementById('vp1-y').addEventListener('input', (e) => {
+            this.cameraSync = false;
+            this.updateVanishingPointAxis(0, 'y', parseInt(e.target.value));
+            document.getElementById('vp1-y-value').textContent = e.target.value;
+        });
+
+        document.getElementById('vp1-y').addEventListener('change', () => {
             this.cameraSync = true;
         });
         
@@ -90,9 +98,14 @@ class PerspectiveManager {
      */
     setPerspectiveType(type) {
         this.currentType = type;
-        
+
         // Update UI
         this.updateVanishingPointControls();
+
+        const note = document.getElementById('one-point-note');
+        if (note) {
+            note.style.display = type === CONFIG.perspective.types.ONE_POINT ? 'block' : 'none';
+        }
         
         // Update renderer
         this.renderer.setPerspectiveType(type);
@@ -141,17 +154,21 @@ class PerspectiveManager {
         const vpPositions = this.vanishingPointPositions[this.currentType];
         
         // VP1 (always present)
-        const vp1Slider = document.getElementById('vp1-position');
-        const vp1Value = document.getElementById('vp1-position-value');
-        
+        const vp1X = document.getElementById('vp1-x');
+        const vp1XValue = document.getElementById('vp1-x-value');
+        const vp1Y = document.getElementById('vp1-y');
+        const vp1YValue = document.getElementById('vp1-y-value');
+
         if (this.currentType === CONFIG.perspective.types.ONE_POINT) {
-            // For one-point, VP1 is the z position
-            vp1Slider.value = vpPositions[0].z;
-            vp1Value.textContent = vpPositions[0].z;
+            vp1X.value = vpPositions[0].x;
+            vp1XValue.textContent = vpPositions[0].x;
+            vp1Y.value = vpPositions[0].y;
+            vp1YValue.textContent = vpPositions[0].y;
         } else {
-            // For two/three-point, VP1 is the x position of the left VP
-            vp1Slider.value = vpPositions[0].x;
-            vp1Value.textContent = vpPositions[0].x;
+            vp1X.value = vpPositions[0].x;
+            vp1XValue.textContent = vpPositions[0].x;
+            vp1Y.value = vpPositions[0].y;
+            vp1YValue.textContent = vpPositions[0].y;
         }
         
         // VP2 (present in two-point and three-point)
@@ -216,6 +233,21 @@ class PerspectiveManager {
         this.renderer.updateVanishingPoints();
         this.renderer.updateReferenceLines();
     }
+
+    updateVanishingPointAxis(vpIndex, axis, value) {
+        const vpPositions = this.vanishingPointPositions[this.currentType];
+        value = Math.max(-1000, Math.min(1000, value));
+        if (vpPositions[vpIndex]) {
+            vpPositions[vpIndex][axis] = value;
+        }
+
+        CONFIG.perspective.vanishingPoints.onePoint = this.vanishingPointPositions[CONFIG.perspective.types.ONE_POINT];
+        CONFIG.perspective.vanishingPoints.twoPoint = this.vanishingPointPositions[CONFIG.perspective.types.TWO_POINT];
+        CONFIG.perspective.vanishingPoints.threePoint = this.vanishingPointPositions[CONFIG.perspective.types.THREE_POINT];
+
+        this.renderer.updateVanishingPoints();
+        this.renderer.updateReferenceLines();
+    }
     
     /**
      * Update vanishing point based on camera position
@@ -275,20 +307,15 @@ class PerspectiveManager {
         const vpPositions = this.vanishingPointPositions[this.currentType];
         
         // VP1 (always present)
-        const vp1Slider = document.getElementById('vp1-position');
-        const vp1Value = document.getElementById('vp1-position-value');
-        
-        if (this.currentType === CONFIG.perspective.types.ONE_POINT) {
-            // For one-point, VP1 is the z position
-            const clampedValue = Math.max(-1000, Math.min(1000, vpPositions[0].z));
-            vp1Slider.value = clampedValue;
-            vp1Value.textContent = clampedValue;
-        } else {
-            // For two/three-point, VP1 is the x position of the left VP
-            const clampedValue = Math.max(-1000, Math.min(1000, vpPositions[0].x));
-            vp1Slider.value = clampedValue;
-            vp1Value.textContent = clampedValue;
-        }
+        const vp1X = document.getElementById('vp1-x');
+        const vp1XValue = document.getElementById('vp1-x-value');
+        const vp1Y = document.getElementById('vp1-y');
+        const vp1YValue = document.getElementById('vp1-y-value');
+
+        vp1X.value = vpPositions[0].x;
+        vp1XValue.textContent = vpPositions[0].x;
+        vp1Y.value = vpPositions[0].y;
+        vp1YValue.textContent = vpPositions[0].y;
         
         // VP2 (present in two-point and three-point)
         if (this.currentType !== CONFIG.perspective.types.ONE_POINT) {
