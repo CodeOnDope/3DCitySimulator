@@ -36,8 +36,8 @@ class UIManager {
         });
         
         // Building count slider
-        const buildingCount = document.getElementById('building-count');
-        const buildingCountValue = document.getElementById('building-count-value');
+        const buildingCount = document.getElementById('buildingCount');
+        const buildingCountValue = document.getElementById('buildingCountValue');
         if (buildingCount && buildingCountValue) {
             buildingCount.addEventListener('input', (e) => {
                 buildingCountValue.textContent = e.target.value;
@@ -45,8 +45,8 @@ class UIManager {
         }
         
         // Grid size slider
-        const gridSize = document.getElementById('grid-size');
-        const gridSizeValue = document.getElementById('grid-size-value');
+        const gridSize = document.getElementById('gridSize');
+        const gridSizeValue = document.getElementById('gridSizeValue');
         if (gridSize && gridSizeValue) {
             gridSize.addEventListener('input', (e) => {
                 gridSizeValue.textContent = e.target.value;
@@ -185,7 +185,7 @@ class UIManager {
         try {
             // Get building count from slider or use default
             let count = 10; // Default value
-            const buildingCountElement = document.getElementById('building-count');
+            const buildingCountElement = document.getElementById('buildingCount');
             if (buildingCountElement) {
                 count = parseInt(buildingCountElement.value);
             }
@@ -199,7 +199,7 @@ class UIManager {
             
             // Get grid size from slider or use default
             let gridSize = 500; // Default value
-            const gridSizeElement = document.getElementById('grid-size');
+            const gridSizeElement = document.getElementById('gridSize');
             if (gridSizeElement) {
                 gridSize = parseInt(gridSizeElement.value);
             }
