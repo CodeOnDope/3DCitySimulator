@@ -9,6 +9,7 @@ class EducationManager {
         this.perspectiveManager = perspectiveManager;
         this.isOverlayVisible = false;
         this.currentOverlay = null;
+        this.isNode = typeof process !== 'undefined' && process.versions && process.versions.node;
     }
     
     /**
@@ -16,7 +17,9 @@ class EducationManager {
      */
     init() {
         this.setupEventListeners();
-        this.preloadImages();
+        if (this.isNode) {
+            this.preloadImages();
+        }
     }
     
     /**
@@ -39,9 +42,11 @@ class EducationManager {
      * Preload educational images
      */
     preloadImages() {
+        if (!this.isNode) return;
+
         // Create img directory if it doesn't exist
         const imgDir = '/home/ubuntu/3DCitySimulator/img';
-        
+
         // Create educational diagrams using canvas
         this.createPerspectiveDiagrams(imgDir);
     }
@@ -50,12 +55,14 @@ class EducationManager {
      * Create perspective diagram images
      */
     createPerspectiveDiagrams(imgDir) {
+        if (!this.isNode) return;
+
         // Create directory structure
         const fs = require('fs');
         if (!fs.existsSync(imgDir)) {
             fs.mkdirSync(imgDir, { recursive: true });
         }
-        
+
         // Create diagrams using Canvas API
         this.create1PointDiagram(`${imgDir}/1point-diagram.png`);
         this.create2PointDiagram(`${imgDir}/2point-diagram.png`);
@@ -66,6 +73,7 @@ class EducationManager {
      * Create 1-point perspective diagram
      */
     create1PointDiagram(filePath) {
+        if (!this.isNode) return;
         const { createCanvas } = require('canvas');
         const fs = require('fs');
         
@@ -173,6 +181,7 @@ class EducationManager {
      * Create 2-point perspective diagram
      */
     create2PointDiagram(filePath) {
+        if (!this.isNode) return;
         const { createCanvas } = require('canvas');
         const fs = require('fs');
         
@@ -289,6 +298,7 @@ class EducationManager {
      * Create 3-point perspective diagram
      */
     create3PointDiagram(filePath) {
+        if (!this.isNode) return;
         const { createCanvas } = require('canvas');
         const fs = require('fs');
         
