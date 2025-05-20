@@ -36,6 +36,18 @@ class UIManager {
         if (randomizeBtn) {
             randomizeBtn.addEventListener('click', () => this.renderer.randomizeSettings());
         }
+
+        const onePointBtn = document.getElementById('one-point-view-btn');
+        if (onePointBtn) {
+            onePointBtn.addEventListener('click', () => {
+                this.perspectiveManager.setPerspectiveType(CONFIG.perspective.types.ONE_POINT);
+                this.renderer.setCameraView('frontView');
+                this.renderer.toggleVanishingPoints(true);
+                this.renderer.toggleHorizonLine(true);
+                this.renderer.toggleHelperLines(true);
+                this.renderer.updateReferenceLines();
+            });
+        }
         
         // Building count slider
         const buildingCount = document.getElementById('building-count');
@@ -74,6 +86,20 @@ class UIManager {
         if (showBuildingLines) {
             showBuildingLines.addEventListener('change', (e) => {
                 this.renderer.toggleReferenceLines(e.target.checked);
+            });
+        }
+
+        const showHorizon = document.getElementById('show-horizon-toggle');
+        if (showHorizon) {
+            showHorizon.addEventListener('change', (e) => {
+                this.renderer.toggleHorizonLine(e.target.checked);
+            });
+        }
+
+        const showHelpers = document.getElementById('show-helpers-toggle');
+        if (showHelpers) {
+            showHelpers.addEventListener('change', (e) => {
+                this.renderer.toggleHelperLines(e.target.checked);
             });
         }
         

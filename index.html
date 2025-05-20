@@ -369,8 +369,10 @@
                         <div id="vanishing-point-controls">
                             <h3>Vanishing Points</h3>
                             <div id="vp1-controls" class="slider-container">
-                                <label for="vp1-position">VP1 Position: <span id="vp1-position-value">-1000</span></label>
-                                <input type="range" id="vp1-position" min="-1000" max="1000" value="-1000">
+                                <label for="vp1-x">VP X: <span id="vp1-x-value">0</span></label>
+                                <input type="range" id="vp1-x" min="-1000" max="1000" value="0">
+                                <label for="vp1-y">VP Y: <span id="vp1-y-value">100</span></label>
+                                <input type="range" id="vp1-y" min="0" max="1000" value="100">
                             </div>
                             <div id="vp2-controls" class="slider-container">
                                 <label for="vp2-position">VP2 Position: <span id="vp2-position-value">1000</span></label>
@@ -380,6 +382,8 @@
                                 <label for="vp3-position">VP3 Position: <span id="vp3-position-value">1000</span></label>
                                 <input type="range" id="vp3-position" min="-1000" max="1000" value="1000">
                             </div>
+                            <p id="one-point-note" class="educational-note" style="display:none;">In one-point perspective, all receding lines converge to a single vanishing point on the horizon line.</p>
+                            <button id="one-point-view-btn" class="secondary-btn">One-Point View</button>
                         </div>
                     </div>
                 </div>
@@ -711,6 +715,20 @@
                                 <label for="show-lines-toggle">Perspective Lines</label>
                                 <div class="toggle-switch">
                                     <input type="checkbox" id="show-lines-toggle" class="visual-option-toggle" data-option="referenceLines" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            <div class="control-row">
+                                <label for="show-horizon-toggle">Horizon Line</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="show-horizon-toggle" class="visual-option-toggle" data-option="horizon" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            <div class="control-row">
+                                <label for="show-helpers-toggle">Perspective Helpers</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="show-helpers-toggle" class="visual-option-toggle" data-option="helpers" checked>
                                     <span class="toggle-slider"></span>
                                 </div>
                             </div>
