@@ -27,15 +27,13 @@ class UIManager {
      */
     setupEventListeners() {
         // Generate and randomize buttons
-        const generateBtn = document.getElementById('generateBtn');
-        if (generateBtn) {
-            generateBtn.addEventListener('click', () => this.generateCity());
-        }
-        
-        const randomizeBtn = document.getElementById('randomizeBtn');
-        if (randomizeBtn) {
-            randomizeBtn.addEventListener('click', () => this.renderer.randomizeSettings());
-        }
+        document.querySelectorAll('#generateBtn').forEach(btn => {
+            btn.addEventListener('click', () => this.generateCity());
+        });
+
+        document.querySelectorAll('#randomizeBtn').forEach(btn => {
+            btn.addEventListener('click', () => this.renderer.randomizeSettings());
+        });
         
         // Building count slider
         const buildingCount = document.getElementById('building-count');
@@ -94,10 +92,9 @@ class UIManager {
         });
         
         // Help button (opens help modal)
-        const helpBtn = document.getElementById('helpBtn');
-        if (helpBtn) {
-            helpBtn.addEventListener('click', () => this.openModal());
-        }
+        document.querySelectorAll('#helpBtn').forEach(btn => {
+            btn.addEventListener('click', () => this.openModal());
+        });
         
         // Modal close button
         const closeModal = document.getElementById('close-modal');
